@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.wangjiyuan.iplaynews.activity.WebContentActivity">
+
+    <WebView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></WebView>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/show"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/start_publish"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+
+                android:layout_weight="5"
+                android:background="@drawable/round_rectangle"
+                android:gravity="center_vertical"
+                android:paddingLeft="25dp"
+                android:text="@string/comment_hint"
+                android:textColor="@color/dark_gray" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/comment_img"
+                    android:layout_width="match_parent"
+                    android:src="@drawable/btn_pgnews_commen"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/comment_tv"
+                    android:layout_width="20dp"
+                    android:layout_height="15dp"
+                    android:text="888"
+                    android:textSize="10sp"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center"
+                    android:textColor="@color/red" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/collection"
+                android:src="@drawable/btn_pgnews_save1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/share"
+                android:layout_width="0dp"
+                android:src="@drawable/btn_pgnews_share"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/comment_interface"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp">
+
+                <ImageView
+                    android:src="@drawable/btn_delete"
+                    android:id="@+id/close"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
+
+                <TextView
+                    android:id="@+id/publish"
+                    android:layout_width="50dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/round_rectangle"
+                    android:gravity="center"
+                    android:text="发表"
+                    android:textColor="@color/white" />
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/comment_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/light_gray"
+                android:hint="@string/comment_hint"
+                android:minLines="4"
+                android:textColor="@color/dark_gray" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

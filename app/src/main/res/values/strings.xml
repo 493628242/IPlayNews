@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">IPlayNews</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="comment_hint">留下你的脚印...</string>
+</resources>
