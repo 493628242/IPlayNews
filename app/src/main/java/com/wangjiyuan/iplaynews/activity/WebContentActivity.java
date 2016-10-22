@@ -3,8 +3,14 @@ package com.wangjiyuan.iplaynews.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,12 +19,14 @@ import android.widget.Toast;
 
 import com.wangjiyuan.iplaynews.R;
 import com.wangjiyuan.iplaynews.adapter.RecycleAdapter;
+import com.wangjiyuan.iplaynews.base.BaseActivity;
 import com.wangjiyuan.iplaynews.javabean.HeadInfo;
+import com.wangjiyuan.iplaynews.javabean.InfoBean;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class WebContentActivity extends AppCompatActivity implements View.OnClickListener {
+public class WebContentActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.content)
     WebView content;
@@ -48,15 +56,40 @@ public class WebContentActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_content);
         ButterKnife.bind(this);
-        initData();
+        WebViewSetting();
         initView();
+        initData();
+    }
+
+    private void WebViewSetting() {
+        content.setInitialScale(100);
+        WebSettings settings = content.getSettings();
+        settings.setJavaScriptEnabled(false);
     }
 
     private void initData() {
+        //显示网页
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra(RecycleAdapter.INFO_BUNDLE);
-        HeadInfo.InfoBean info = (HeadInfo.InfoBean) bundle.get(RecycleAdapter.INFO);
+        InfoBean info = (InfoBean) bundle.get(RecycleAdapter.INFO);
         commentTv.setText(String.valueOf(info.getReplyCount()));
+        if (!info.getUrl3w().isEmpty()) {
+            content.loadUrl(info.getUrl3w());
+        } else {
+            content.loadUrl(info.getUrl());
+
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        content.stopLoading();
+        ((ViewGroup) content.getParent()).removeView(content);
+        content.removeAllViews();
+        content.clearCache(true);
+        content.clearHistory();
+        content.destroy();
     }
 
     private void initView() {
@@ -67,6 +100,33 @@ public class WebContentActivity extends AppCompatActivity implements View.OnClic
         share.setOnClickListener(this);
         close.setOnClickListener(this);
         publish.setOnClickListener(this);
+
+        content.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onLoadResource(WebView view, String url) {
+                super.onLoadResource(view, url);
+            }
+        });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.e("aaa", keyCode + "====" + KeyEvent.KEYCODE_BACK);
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Log.e("aaa", keyCode + "====" + KeyEvent.KEYCODE_BACK);
+
+            if (commentInterface.getVisibility() == View.VISIBLE) {
+                Log.e("asad", "ASdasd");
+                //如果评论界面显示则关闭评论界面
+                show.setVisibility(View.VISIBLE);
+                commentInterface.setVisibility(View.GONE);
+                return false;
+            } else {
+                return super.onKeyDown(keyCode, event);
+            }
+
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

@@ -1,30 +1,33 @@
 package com.wangjiyuan.iplaynews.fragment;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.wangjiyuan.iplaynews.R;
 import com.wangjiyuan.iplaynews.adapter.RecycleAdapter;
 import com.wangjiyuan.iplaynews.base.BaseFragment;
+import com.wangjiyuan.iplaynews.http.HttpUtil;
 import com.wangjiyuan.iplaynews.javabean.HeadInfo;
-import com.wangjiyuan.iplaynews.util.OkhttpUitl;
+import com.wangjiyuan.iplaynews.javabean.InfoBean;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 
 /**
@@ -40,10 +43,13 @@ import okhttp3.Response;
 public class NewsListFragment extends BaseFragment {
 
     public static final String URL = "http://i.play.163.com/user/article/list%s/0/10";
+    @BindView(R.id.refresh)
+    SwipeRefreshLayout refresh;
     private String type;
     @BindView(R.id.recycle_view)
     RecyclerView recycleView;
-    private List<HeadInfo.InfoBean> list;
+    private List<InfoBean> list;
+    private Subscription subscribe;
 
     public NewsListFragment() {
     }
@@ -55,43 +61,59 @@ public class NewsListFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_news_list, container, false);
-        initData();
-        initView(rootView);
-
+        View rootView = inflater.inflate(R.layout.refresh_layout, container, false);
         ButterKnife.bind(this, rootView);
+        RefreshSetting();
+        initData();
         return rootView;
     }
 
-    private void initView(View rootView) {
-
-    }
-
     private void initData() {
-        String url = String.format(URL, type);
-        OkhttpUitl.getAsyncString(url, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String json = response.body().string();
-                Gson gson = new Gson();
-                HeadInfo headInfo = gson.fromJson(json, HeadInfo.class);
-                list = new ArrayList<>();
-                list.addAll(0, headInfo.getInfo());
-                getActivity().runOnUiThread(new Runnable() {
+        //数据加载
+        HttpUtil httpUtil = HttpUtil.newInstance();
+        subscribe = httpUtil.getInfor(type)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<HeadInfo>() {
                     @Override
-                    public void run() {
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Toast.makeText(getContext(), "无法连接网络", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(HeadInfo headInfo) {
+                        list = new ArrayList<>();
+                        list.addAll(0, headInfo.getInfo());
                         recycleView.setAdapter(new RecycleAdapter(getContext(), list));
                         LinearLayoutManager manager = new LinearLayoutManager(getContext(),
                                 LinearLayoutManager.VERTICAL, false);
                         recycleView.setLayoutManager(manager);
                     }
                 });
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        subscribe.unsubscribe();
+    }
+
+    private void RefreshSetting() {
+        refresh.setProgressBackgroundColorSchemeColor(Color.WHITE);
+        refresh.setDrawingCacheBackgroundColor(Color.BLACK);
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initData();
+                refresh.setRefreshing(false);
             }
         });
+
     }
 }

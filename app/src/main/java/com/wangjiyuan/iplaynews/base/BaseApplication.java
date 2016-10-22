@@ -1,21 +1,32 @@
 package com.wangjiyuan.iplaynews.base;
 
 import android.app.Application;
+import android.database.ContentObservable;
+import android.graphics.Bitmap;
 
-import com.squareup.picasso.LruCache;
-import com.squareup.picasso.Picasso;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
+
+import okhttp3.OkHttpClient;
 
 /**
- * Created by DELL on 2016/10/14.
+ * Created by wjy on 2016/10/14.
  */
 public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        initPicasso();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        ImagePipelineConfig config = OkHttpImagePipelineConfigFactory.
+                newBuilder(this, okHttpClient)
+                .setBitmapsConfig(Bitmap.Config.RGB_565)
+                .build();
+        Fresco.initialize(this, config);
+
     }
 
-    private void initPicasso() {
+    /*private void initPicasso() {
         Picasso picasso = new Picasso.Builder(this)
                 //设置内存缓存大小10M
                 .memoryCache(new LruCache(10 << 20))
@@ -27,5 +38,5 @@ public class BaseApplication extends Application {
                 .build();
         //设置Picasso单例模式
         Picasso.setSingletonInstance(picasso);
-    }
+    }*/
 }
