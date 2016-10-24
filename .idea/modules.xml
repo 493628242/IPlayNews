@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/IPlayNews.iml" filepath="$PROJECT_DIR$/IPlayNews.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ZXingLibrary/ZXingLibrary.iml" filepath="$PROJECT_DIR$/ZXingLibrary/ZXingLibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

@@ -17,13 +17,16 @@ import com.wangjiyuan.iplaynews.activity.WebContentActivity;
 import com.wangjiyuan.iplaynews.javabean.HeadInfo;
 import com.wangjiyuan.iplaynews.javabean.InfoBean;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by wjy on 2016/10/8.
  */
 public class RecycleAdapter extends RecyclerView.Adapter {
-    private List<InfoBean> mList;
+    private Set<InfoBean> mSet;
     private Context mContext;
     private LayoutInflater inflater;
     public static final int VH2 = R.layout.item_type_2;
@@ -32,15 +35,24 @@ public class RecycleAdapter extends RecyclerView.Adapter {
     public static final String INFO_BUNDLE = "info_bundle";
     public static final String INFO = "info";
 
-    public RecycleAdapter(Context context, List<InfoBean> list) {
+    public RecycleAdapter(Context context, Set<InfoBean> set) {
         mContext = context;
         inflater = LayoutInflater.from(context);
-        mList = list;
+        mSet = set;
     }
 
 
     public InfoBean getItem(int position) {
-        return mList.get(position);
+        Iterator<InfoBean> iterator = mSet.iterator();
+        int count = 0;
+        while (iterator.hasNext()) {
+            InfoBean bean = iterator.next();
+            if (count == position) {
+                return bean;
+            }
+            count++;
+        }
+        return null;
     }
 
     @Override
@@ -50,7 +62,9 @@ public class RecycleAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return mList.size();
+
+
+        return mSet.size();
     }
 
     @Override

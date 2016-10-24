@@ -3,6 +3,7 @@
     package="com.wangjiyuan.iplaynews">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".base.BaseApplication"
@@ -19,7 +20,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".base.BaseActivity" />
-        <activity android:name=".activity.WebContentActivity"></activity>
+        <activity android:name=".activity.WebContentActivity" />
+        <activity android:name=".activity.CollectionListActivity" />
+        <activity android:name=".activity.ErWeiMaActivity" />
+        <activity android:name=".activity.ShareWebActivity" />
+        <activity android:name="com.yztc.zxinglibrary.android.CaptureActivity" />
     </application>
 
 </manifest>

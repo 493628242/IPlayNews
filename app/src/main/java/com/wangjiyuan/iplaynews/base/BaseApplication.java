@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.litesuits.orm.LiteOrm;
 
 import okhttp3.OkHttpClient;
 
@@ -17,13 +18,28 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        initFresco();
+        initLiteOrm();
+
+    }
+
+    public static final String DB_NAME = "collection.db";
+    public static LiteOrm liteOrm;
+
+    private void initLiteOrm() {
+        if (liteOrm == null) {
+            liteOrm = LiteOrm.newSingleInstance(this, DB_NAME);
+        }
+        liteOrm.setDebugged(true); // open the log
+    }
+
+    private void initFresco() {
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         ImagePipelineConfig config = OkHttpImagePipelineConfigFactory.
                 newBuilder(this, okHttpClient)
                 .setBitmapsConfig(Bitmap.Config.RGB_565)
                 .build();
         Fresco.initialize(this, config);
-
     }
 
     /*private void initPicasso() {

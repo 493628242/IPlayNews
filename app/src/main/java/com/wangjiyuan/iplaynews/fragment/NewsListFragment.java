@@ -7,12 +7,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.wangjiyuan.iplaynews.R;
+import com.wangjiyuan.iplaynews.activity.MainActivity;
 import com.wangjiyuan.iplaynews.adapter.RecycleAdapter;
 import com.wangjiyuan.iplaynews.base.BaseFragment;
 import com.wangjiyuan.iplaynews.http.HttpUtil;
@@ -20,7 +22,10 @@ import com.wangjiyuan.iplaynews.javabean.HeadInfo;
 import com.wangjiyuan.iplaynews.javabean.InfoBean;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,15 +53,12 @@ public class NewsListFragment extends BaseFragment {
     private String type;
     @BindView(R.id.recycle_view)
     RecyclerView recycleView;
-    private List<InfoBean> list;
+    private Set<InfoBean> set;
     private Subscription subscribe;
 
     public NewsListFragment() {
     }
 
-    public NewsListFragment(String type) {
-        this.type = type;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,9 +71,11 @@ public class NewsListFragment extends BaseFragment {
     }
 
     private void initData() {
+        Bundle arguments = getArguments();
+        type = arguments.getString(MainActivity.TYPE);
         //数据加载
         HttpUtil httpUtil = HttpUtil.newInstance();
-        subscribe = httpUtil.getInfor(type)
+        subscribe = httpUtil.getInfor(this.type)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<HeadInfo>() {
@@ -87,15 +91,15 @@ public class NewsListFragment extends BaseFragment {
 
                     @Override
                     public void onNext(HeadInfo headInfo) {
-                        list = new ArrayList<>();
-                        list.addAll(0, headInfo.getInfo());
-                        recycleView.setAdapter(new RecycleAdapter(getContext(), list));
+                        set = new TreeSet<>();
+                        List<InfoBean> info = headInfo.getInfo();
+                        set.addAll(info);
+                        recycleView.setAdapter(new RecycleAdapter(getContext(), set));
                         LinearLayoutManager manager = new LinearLayoutManager(getContext(),
                                 LinearLayoutManager.VERTICAL, false);
                         recycleView.setLayoutManager(manager);
                     }
                 });
-
     }
 
     @Override
