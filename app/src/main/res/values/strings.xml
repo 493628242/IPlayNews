@@ -6,4 +6,6 @@
     <string name="collection">收藏</string>
     <string name="erweima">二维码</string>
     <string name="share">分享</string>
+    <string name="sys">扫一扫</string>
+    <string name="click_share">点击分享</string>
 </resources>

@@ -16,10 +16,11 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.wangjiyuan.iplaynews.R;
 import com.wangjiyuan.iplaynews.adapter.ViewPagerAdapter;
 import com.wangjiyuan.iplaynews.base.BaseActivity;
@@ -40,6 +41,12 @@ public class MainActivity extends BaseActivity {
     TabLayout tabLayout;
     @BindView(R.id.view_pager_news_content)
     ViewPager viewPagerNewsContent;
+    @BindView(R.id.sys)
+    FloatingActionButton sys;
+    @BindView(R.id.share)
+    FloatingActionButton share;
+    @BindView(R.id.menu_button)
+    FloatingActionsMenu menuButton;
     private long fisttime;
     private long secondtime;
     private PopupWindow mPopupWindow;
@@ -74,6 +81,9 @@ public class MainActivity extends BaseActivity {
         return false;
     }
 
+    /**
+     * 弹出popup window 放弃使用
+     */
     private void initPopupWindow() {
         View popupView = getLayoutInflater().inflate(R.layout.popupwindow_layout, null);
         mPopupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
@@ -102,15 +112,31 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    private void initFloatActinButton() {
+        sys.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CaptureActivity.class);
+                startActivityForResult(intent, 0);
+
+            }
+        });
+
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CollectionListActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == -1) {
             Intent intent = data;
             intent.setClass(MainActivity.this, ShareWebActivity.class);
-            String content = intent.getStringExtra(GET_URL);
-
-//            Log.e("content", content);
             startActivity(intent);
 
         }
@@ -118,7 +144,7 @@ public class MainActivity extends BaseActivity {
 
     @TargetApi(Build.VERSION_CODES.M)
     private void iniView() {
-        initPopupWindow();
+        initFloatActinButton();
         tabLayout.setupWithViewPager(viewPagerNewsContent, true);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
         tabLayout.setBackgroundColor(Color.BLACK);

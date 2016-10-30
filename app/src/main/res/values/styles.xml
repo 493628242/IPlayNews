@@ -14,4 +14,10 @@
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:layout_marginLeft">10dp</item>
     </style>
+
+    <!--Float_button的style-->
+    <style name="float_button_menu">
+        <item name="android:background">@drawable/float_button_background</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
 </resources>

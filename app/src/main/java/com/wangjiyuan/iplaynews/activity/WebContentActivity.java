@@ -1,8 +1,10 @@
 package com.wangjiyuan.iplaynews.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -148,10 +150,11 @@ public class WebContentActivity extends BaseActivity implements View.OnClickList
 
     private void initPopupWindow() {
         View popupView = getLayoutInflater().inflate(R.layout.share_erweima, null);
-        mPopupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        mPopupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, false);
         mPopupWindow.setTouchable(true);
         mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setBackgroundDrawable(new BitmapDrawable(getResources(), BitmapFactory.decodeResource(getResources(), R.drawable.menu_tab)));
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable());
         ImageButton erweima = (ImageButton) popupView.findViewById(R.id.erweima);
         erweima.setOnClickListener(new View.OnClickListener() {
             @Override
